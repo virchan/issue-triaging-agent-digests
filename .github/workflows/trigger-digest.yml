@@ -10,7 +10,7 @@ jobs:
       - name: Call the deployed service's /trigger endpoint
         run: |
           status=$(curl -s -o /tmp/response.json -w "%{http_code}" \
-            -X POST "https://issue-triaging-agent-4122524611.us-east1.run.app/trigger" \
+            -X POST "${{ vars.SERVICE_URL }}/trigger" \
             -H "X-Trigger-Token: ${{ secrets.TRIGGER_SECRET }}")
           cat /tmp/response.json
           if [ "$status" -ge 300 ]; then
