@@ -1,0 +1,19 @@
+name: Trigger digest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the deployed service's /trigger endpoint
+        run: |
+          status=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -X POST "https://issue-triaging-agent-4122524611.us-east1.run.app/trigger" \
+            -H "X-Trigger-Token: ${{ secrets.TRIGGER_SECRET }}")
+          cat /tmp/response.json
+          if [ "$status" -ge 300 ]; then
+            echo "Trigger failed with HTTP $status"
+            exit 1
+          fi
